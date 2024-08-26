@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+recette ~ {{ slug }}
+{% endblock %}
+
+{% block body %}
+Yop {{ slug | upper }} {{ person.lastname }} {{ test | raw}}
+{% endblock %}
