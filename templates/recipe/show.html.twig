@@ -1,9 +1,14 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-recette ~ {{ slug }}
+recette ~ {{ recipe.Title }}
 {% endblock %}
 
 {% block body %}
-Yop {{ slug | upper }} {{ person.lastname }} {{ test | raw}}
+<h1>{{ recipe.title}}</h1>
+{# Yop #}
+{{ recipe.content | nl2br }}
+{# {{ slug | upper }}  #}
+{# {{ person.lastname }}  #}
+{# {{ test | raw}} #}
 {% endblock %}
