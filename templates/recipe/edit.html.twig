@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+recette ~ {{ recipe.Title }}
+{% endblock %}
+
+{% block body %}
+    <h1>{{ recipe.title}}</h1>
+    {# affiche tout le form par default #}
+    {{ form(form) }}
+
+{#    permet de choisir l'ordre des champs a affiche et leurs mettre des class bootstrap 
+{#    {{ form_start(form) }}
+
+    <div class="d-flex">
+
+        {{ form_row(form.title) }}
+        {{ form_row(form.duration) }} 
+
+    </div>
+
+    {{ form_end(form) }} #}
+
+{% endblock %}
