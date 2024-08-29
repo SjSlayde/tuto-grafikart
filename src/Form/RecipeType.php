@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Recipe;
 use phpDocumentor\Reflection\Types\Void_;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Event\PostSubmitEvent;
 use Symfony\Component\Form\Event\PreSubmitEvent;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -25,6 +26,7 @@ class RecipeType extends AbstractType
                 'label' => 'Envoyer'
             ])
             ->addEventListener(FormEvents::PRE_SUBMIT, $this->autoslug(...))
+            ->addEventListener(FormEvents::POST_SUBMIT, $this->autodatetime(...))
         ;
     }
 
@@ -35,6 +37,18 @@ class RecipeType extends AbstractType
             $slugger = new AsciiSlugger();
             $data['slug'] = strtolower($slugger->slug($data['title']));
             $event->setData($data);
+        }
+    }
+
+    public function autodatetime(PostSubmitEvent $event):Void
+    {
+        $data = $event->getData();
+        if (($data instanceof Recipe)){
+            return;
+        }
+        $data->setUpdateAt(new \DateTimeImmutable());
+        if (!$data->getId()){
+            $data->setCreatedAt(new \DateTimeImmutable());
         }
     }
 
