@@ -17,7 +17,7 @@ class RecipeController extends AbstractController
     #[Route('/recette', name:'recipe.index')]
     public function index(Request $request, RecipeRepository $repository, EntityManagerInterface $em): Response
     {
-        $recipes = $repository->findWithDurationLowerThan(20);
+        $recipes = $repository->findWithDurationLowerThan(600);
         // dd($repository->findTotalDuration());
 
         //trouve le repository souhaiter

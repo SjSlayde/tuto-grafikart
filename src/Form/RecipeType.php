@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Recipe;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use phpDocumentor\Reflection\Types\Void_;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Event\PostSubmitEvent;
@@ -23,16 +24,15 @@ class RecipeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('title')
-            ->add('slug', TextareaType::class, [
-                'required' => false,
-                'constraints' => new Sequentially([
-                    new Length(min: 10),
-                    new Regex('/^[a-z0-9]+(?:-[a-z0-9]+)+$/',
-                    message: 'Reg exp pas valide')
+            ->add('title', TextType::class, [
+                'empty_data' => ''
             ])
+            ->add('slug', TextType::class, [
+                'required' => false
             ])
-            ->add('content')
+            ->add('content', TextareaType::class, [
+                'empty_data' => ''
+            ])
             ->add('duration')
             ->add('save', SubmitType::class, [
                 'label' => 'Envoyer'
@@ -68,6 +68,8 @@ class RecipeType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Recipe::class,
+            //permet d'appliquer dimplement un groupe de contrainte(le groupe Default represente les contraint sans groupe)
+            'validation_groups' => ['Default' ,'extra']
         ]);
     }
 }
