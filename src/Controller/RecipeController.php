@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Demo;
 use App\Form\RecipeType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -11,13 +12,24 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Entity\Recipe;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class RecipeController extends AbstractController
 {
-    #[Route('/recette', name:'recipe.index')]
-    public function index(Request $request, RecipeRepository $repository, EntityManagerInterface $em): Response
+    public function __construct(private RecipeRepository $repository){
+        
+    }
+
+    #[Route('/demo')]
+    public function demo (Demo $demo)
     {
-        $recipes = $repository->findWithDurationLowerThan(600);
+        dd($demo);
+    }
+
+    #[Route('/recette', name:'recipe.index')]
+    public function index(Request $request, EntityManagerInterface $em): Response
+    {
+        $recipes = $this->repository->findWithDurationLowerThan(600);
         // dd($repository->findTotalDuration());
 
         //trouve le repository souhaiter
@@ -50,9 +62,9 @@ class RecipeController extends AbstractController
 
     // route on lui indique que dans  url il y aura un des variable en int et text 
     #[Route('/recette/{slug}-{id}', name: 'recipe.show', requirements: ['id' => '\d+' , 'slug' => '[a-z0-9-â]+'])]
-    public function show(Request $request , string $slug, int $id, RecipeRepository $repository): Response
+    public function show(Request $request , string $slug, int $id): Response
     {   
-        $recipe = $repository->find($id);
+        $recipe = $this->repository->find($id);
         if($recipe->getSlug() != $slug){
             return $this->redirectToRoute('recipe.show', ['id' => $recipe->getId(), 'slug' => $recipe->getSlug()]);
         }
@@ -81,9 +93,9 @@ class RecipeController extends AbstractController
         // dd($request->attributes->get('slug'), $request->attributes->getInt('id'));
     }
     #[route('/recettes/{id}/edit', name: 'recipe.edit', methods :['GET','POST'])]
-    public function edit(int $id, RecipeRepository $repository ,Request $request, EntityManagerInterface $em)
+    public function edit(int $id,Request $request, EntityManagerInterface $em)
     {
-        $recipe = $repository->find($id);
+        $recipe = $this->repository->find($id);
 
         $form = $this->createForm(RecipeType::class, $recipe);
         $form->handleRequest($request);
@@ -101,7 +113,7 @@ class RecipeController extends AbstractController
     }
 
     #[route('/recettes/create', name:'recipe.create')]
-    public function create(Request $request,RecipeRepository $repository ,EntityManagerInterface $em)
+    public function create(Request $request,EntityManagerInterface $em)
     {
         $recipe = new Recipe();
         $form = $this->createForm(RecipeType::class, $recipe);
