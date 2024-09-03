@@ -61,12 +61,12 @@ class RecipeController extends AbstractController
     }
 
     // route on lui indique que dans  url il y aura un des variable en int et text 
-    #[Route('/recette/{slug}-{id}', name: 'recipe.show', requirements: ['id' => '\d+' , 'slug' => '[a-z0-9-â]+'])]
+    #[Route('/recette/{slug}-{id}', name: 'recipe.show', requirements: ['id' => '\d+' , 'slug' => '[a-zA-Z0-9-â]+'])]
     public function show(Request $request , string $slug, int $id): Response
     {   
         $recipe = $this->repository->find($id);
         if($recipe->getSlug() != $slug){
-            return $this->redirectToRoute('recipe.show', ['id' => $recipe->getId(), 'slug' => $recipe->getSlug()]);
+            return $this->redirectToRoute('recipe.show', ['id' => $recipe->getId(), 'slug' => strtolower($recipe->getSlug())]);
         }
         return $this->render('recipe/show.html.twig',[
             'recipe' => $recipe

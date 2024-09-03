@@ -68,7 +68,7 @@ class RecipeType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Recipe::class,
-            //permet d'appliquer dimplement un groupe de contrainte(le groupe Default represente les contraint sans groupe)
+            //permet d'appliquer simplement un groupe de contrainte(le groupe Default represente les contraint sans groupe)
             'validation_groups' => ['Default' ,'extra']
         ]);
     }
