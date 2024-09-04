@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Email\SendEmail;
 use phpDocumentor\Reflection\Types\Void_;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -37,7 +38,7 @@ class ContactType extends AbstractType
     public function VerifInfo(PostSubmitEvent $event): Void
     {
         $data = $event->getData();
-        dd($data);
+        // $email = new SendEmail($data);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
